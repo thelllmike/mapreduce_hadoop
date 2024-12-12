@@ -1,0 +1,13 @@
+services:
+  hadoop:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: hadoop-container
+    ports:
+      - "9870:9870"  # HDFS Web UI
+      - "8088:8088"  # YARN ResourceManager Web UI
+    volumes:
+      - ../hadoop:/app/hadoop        # Mount the hadoop directory
+      - ../data:/input               # Mount the data directory
+      - ../scripts:/app/hadoop/scripts  # Mount the scripts directory
+    environment:
+      - CLUSTER_NAME=hadoop_cluster
