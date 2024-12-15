@@ -21,28 +21,30 @@ public class ScoringQuarterMapper extends Mapper<Object, Text, Text, IntWritable
         String[] fields = line.split(",");
 
         if (fields.length >= 25) {
-            String team = fields[9].trim();               // PLAYER1_TEAM_CITY
+            String teamNickname = fields[11].trim();      // PLAYER1_TEAM_NICKNAME
             String period = fields[5].trim();             // PERIOD
             String homeDescription = fields[3].trim();    // HOMEDESCRIPTION
-            String visitorDescription = fields[24].trim(); // VISITORDESCRIPTION
+            String visitorDescription = fields[24].trim();// VISITORDESCRIPTION
 
             // Check if the home team scored
             if (!homeDescription.isEmpty() && homeDescription.contains("PTS")) {
                 int score = extractPoints(homeDescription);
-                teamQuarter.set(team + "_Q" + period);
+                teamQuarter.set(teamNickname + "_Q" + period);
                 points.set(score);
                 context.write(teamQuarter, points);
             }
-            // Check if the visiting team scored
+
+            // Check if the visitor team scored
             else if (!visitorDescription.isEmpty() && visitorDescription.contains("PTS")) {
                 int score = extractPoints(visitorDescription);
-                teamQuarter.set(team + "_Q" + period);
+                teamQuarter.set(teamNickname + "_Q" + period);
                 points.set(score);
                 context.write(teamQuarter, points);
             }
         }
     }
 
+    // Helper method to extract points from description
     private int extractPoints(String description) {
         try {
             String[] parts = description.split(" ");
